@@ -28,7 +28,7 @@ class create:
             return await name_set.edit("Invalid name. Names can't be longer then 512 chars or less than 3 chars.")
 
         await self.bot.pool.execute('INSERT INTO user_settings ("user_id","user_name") VALUES ($1,$2);',ctx.author.id,name.content)
-        await self.bot.pool.execute('INSERT INTO user_stats ("user_id","uwus_from_adventure","foes_killed","total_deaths") VALUES ($1,$2,$3,$4);', ctx.author.id,0,0,0)
+        await self.bot.pool.execute('INSERT INTO user_stats ("user_id","uwus_from_adventure","foes_killed","total_deaths") VALUES ($1,$2,$3,$4);',ctx.author.id,0,0,0)
         await name_set.delete()
         await ctx.send(f"Success! Made uwulonian with name `{name.content}`".replace('@','@\u200b'))
 

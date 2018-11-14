@@ -90,7 +90,7 @@ I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_
         embed.add_field(name='Members',value=f'{online}{online_count} {idle}{idle_count} {dnd}{dnd_count} {offline}{offline_count}')
         embed.add_field(name='Uptime',value=f'{days}d {hours}h {minutes}m')
         embed.add_field(name='Info',value=f'Made in Python 3.6.6 with Discord.py[rewrite] {discord.__version__}. Made by mellowmarshe#0001. Bot version {self.bot.bot_version}')
-        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983)\n[DigitalOcean Referral](https://m.do.co/c/e9f223fd5a5c)')
+        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983)\n[DigitalOcean Referral](https://m.do.co/c/e9f223fd5a5c)\n[Source](https://github.com/Domterion/uwu2-bot)')
         await ctx.send(embed=embed)
 
 def setup(bot):

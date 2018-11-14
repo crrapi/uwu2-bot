@@ -23,6 +23,7 @@ class uwulonian:
         e = discord.Embed(colour=0x7289da)
 
         e.add_field(name=f"Stats for {uwulonian_name['user_name']}",value=f"""Foes killed - {uwulonian['foes_killed']}\nDeaths - {uwulonian['total_deaths']}\nuwus - {uwulonian['uwus_from_adventure']}""")
+        e.add_field(name='Time created',value=f"""{uwulonian_name['time_created'].strftime("%x at %X")}""")
         await ctx.send(embed=e)
 
 def setup(bot):
