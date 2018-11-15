@@ -45,7 +45,7 @@ class misc:
     @commands.command(aliases=["avy"],description='Get a users or your avatar',usage='avatar [user]',brief='Get a users or your avatar')
     async def avatar(self, ctx,*,user:discord.Member=None):
         user = user or ctx.author
-        embed = discord.Embed(colour=0x6441a5,description=f"[Link]({user.avatar_url})")
+        embed = discord.Embed(colour=0x7289da,description=f"[Link]({user.avatar_url})")
         embed.set_author(name=f"{user.name}'s avatar",url=user.avatar_url)
         embed.set_image(url=user.avatar_url_as(static_format="png"))
         await ctx.send(embed=embed)
