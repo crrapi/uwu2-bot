@@ -36,6 +36,5 @@ class owner:
         except BaseException as e:
             await ctx.send(f"```py\n{type(e).__name__}: {e}")
 
-
 def setup(bot):
     bot.add_cog(owner(bot))

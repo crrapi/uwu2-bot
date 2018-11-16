@@ -56,7 +56,8 @@ class uwu(commands.Bot):
         with open("utils/schema.sql") as f:
             await self.pool.execute(f.read())
         print("Bot ready!")
-        await self.change_presence(activity=discord.Streaming(name=f'with my fwend', url='https://www.twitch.tv/mellowmarshe'))
+        game = discord.Game("with fwends")
+        await self.change_presence(status=discord.Status.dnd, activity=game)
 
     async def on_command_completion(self, ctx):
         await self.pool.execute("UPDATE commands_used SET commands_used = commands_used + 1;")
