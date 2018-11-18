@@ -8,7 +8,7 @@ import asyncpg
 from datetime import datetime, timedelta
 from random import randint
 
-sorts = ['total_deaths','foes_killed','uwus_from_adventure']
+sorts = ['total_deaths','foes_killed','uwus','current_xp']
 
 class uwulonian:
     def __init__(self, bot):
@@ -24,16 +24,16 @@ class uwulonian:
 
         e = discord.Embed(colour=0x7289da)
 
-        e.add_field(name=f"Stats for {uwulonian_name['user_name']}",value=f"""Foes killed - {uwulonian['foes_killed']}\nDeaths - {uwulonian['total_deaths']}\nuwus - {uwulonian['uwus_from_adventure']}""")
+        e.add_field(name=f"Stats for {uwulonian_name['user_name']}",value=f"""Foes killed - {uwulonian['foes_killed']}\nDeaths - {uwulonian['total_deaths']}\n XP - {uwulonian['current_xp']}\nuwus - {uwulonian['uwus']}""")
         e.add_field(name='Time created',value=f"""{uwulonian_name['time_created'].strftime("%x at %X")}""")
         await ctx.send(embed=e)
 
     @commands.command(aliases=['lb','wowcheaterhenumber1onlb'])
     async def leaderboard(self,ctx,sort=None):
         if sort is None:
-            sort = 'uwus_from_adventure'
+            sort = 'uwus'
         if sort not in sorts:
-            return await ctx.send(f"Invalid type. Valid - total_deaths, foes_killed, and uwus_from_adventure")
+            return await ctx.send(f"Invalid type. Valid - total_deaths, foes_killed, and uwus")
 
         lb = await self.bot.pool.fetch(f"SELECT * FROM user_stats INNER JOIN user_settings ON  user_stats.user_id = user_settings.user_id ORDER BY {sort} DESC LIMIT 5;")
         e = discord.Embed(colour=0x7289da)
