@@ -3,6 +3,9 @@ import sys
 from discord.ext import commands
 import discord
 
+class NotPatron(commands.CommandError):
+    def __init__(self, ctx):
+        super().__init__("You are not a Patron. You can become one here <https://www.patreon.com/mellOwO?alert=2>")
 
 class errorhandler:
     def __init__(self, bot):
@@ -25,9 +28,10 @@ class errorhandler:
             await ctx.send(f"A required argument is missing. Ya sure you read the command description?")
         if isinstance(error, commands.DisabledCommand):
             await ctx.send(f"{ctx.command} is disabled.")
+        if isinstance(error, NotPatron):
+            return await ctx.send(error)
         else:
             print(error)
-
 
 def setup(bot):
     bot.add_cog(errorhandler(bot))

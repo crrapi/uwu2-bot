@@ -16,8 +16,8 @@ class exploring:
     def __unload(self):
         self.task.cancel()
 
-    async def has_timer(self,user_id,type:int):
-        user = await self.bot.pool.fetchrow("SELECT * FROM user_timers WHERE user_id = $1 AND timer_type = $2;",user_id,type)
+    async def has_timer(self,user_id):
+        user = await self.bot.pool.fetchrow("SELECT * FROM user_timers WHERE user_id = $1;",user_id)
         #end_time should be time delta of end time for adventure. If it equals the current time it should be done
         if user is not None:
             return True #user['end_time'] >= datetime.utcnow()
@@ -70,13 +70,13 @@ class exploring:
                 pass
             await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1 AND timer_type = $2",rows['user_id'],rows['timer_type'])
 
-    @commands.command(description='Set your uwulonian out on an adventure')
+    @commands.command(description='Set your uwulonian out on an adventure', aliases=['adv'])
     async def adventure(self,ctx):
         user = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",ctx.author.id)
         if user is None:
             return await ctx.send("You don't have an uwulonian created.")
-        if await self.has_timer(user_id=ctx.author.id,type=1):
-            return await ctx.send("You already have an adventure. Wait for your uwulonian to return for a new adventure.")
+        if await self.has_timer(user_id=ctx.author.id):
+            return await ctx.send("You already have an adventure/exploration. Wait for your uwulonian to return for a new adventure.")
 
         await self.set_timer(user_id=ctx.author.id,time=3600,type=1)
         await ctx.send(f"Sending {user['user_name']} on an adventure! Your uwulonian will be back in an hour. Make sure your DMs are open so I can DM you once your uwulonian is back.")
@@ -86,8 +86,8 @@ class exploring:
         user = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",ctx.author.id)
         if user is None:
             return await ctx.send("You don't have an uwulonian created.")
-        if await self.has_timer(user_id=ctx.author.id,type=0):
-            return await ctx.send("Your uwulonian is already exploring. Wait for your uwulonian to return for a new exploration.")
+        if await self.has_timer(user_id=ctx.author.id):
+            return await ctx.send("Your uwulonian is already exploring/adventure. Wait for your uwulonian to return for a new exploration.")
 
         await self.set_timer(user_id=ctx.author.id,time=1800,type=0)
         await ctx.send(f"Sending {user['user_name']} to explore! Your uwulonian will be back in an hour. Make sure your DMs are open so I can DM you once your uwulonian is back.")

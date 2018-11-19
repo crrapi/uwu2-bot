@@ -33,7 +33,7 @@ class uwulonian:
         if sort is None:
             sort = 'uwus'
         if sort not in sorts:
-            return await ctx.send(f"Invalid type. Valid - total_deaths, foes_killed, and uwus")
+            return await ctx.send(f"Invalid type. Valid - total_deaths, foes_killed, uwus, and current_xp")
 
         lb = await self.bot.pool.fetch(f"SELECT * FROM user_stats INNER JOIN user_settings ON  user_stats.user_id = user_settings.user_id ORDER BY {sort} DESC LIMIT 5;")
         e = discord.Embed(colour=0x7289da)
