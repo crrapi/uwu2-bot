@@ -84,13 +84,12 @@ f'''
 Staring at {len(self.bot.users)} users in {len(self.bot.guilds)} servers.
 I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_percent()}% of my cpu
 {cmds_used} commands have been used      
-~~My VPS has been burning for~~ {days}d {hours}h {minutes}m {seconds}s
 ''')
         embed.set_author(name='Bot Stats')
         embed.add_field(name='Members',value=f'{online}{online_count} {idle}{idle_count} {dnd}{dnd_count} {offline}{offline_count}')
-        embed.add_field(name='Uptime',value=f'{days}d {hours}h {minutes}m')
+        embed.add_field(name='Uptime',value=f'~~My VPS has been burning for~~ {days}d {hours}h {minutes}m')
         embed.add_field(name='Info',value=f'Made in Python 3.6.6 with Discord.py[rewrite] {discord.__version__}. Made by mellowmarshe#0001. Bot version {self.bot.bot_version}')
-        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983)\n[DigitalOcean Referral](https://m.do.co/c/e9f223fd5a5c)\n[Source](https://github.com/Domterion/uwu2-bot)\n[Support](https://discord.gg/494uEhN)\n[Patreon](https://www.patreon.com/mellOwO?alert=2)')
+        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983) | [DigitalOcean Referral](https://m.do.co/c/e9f223fd5a5c)\n[Source](https://github.com/Domterion/uwu2-bot) | [Support](https://discord.gg/494uEhN)\n[Patreon](https://www.patreon.com/mellOwO?alert=2) | [Vote](https://discordbots.org/bot/508725128427995136/vote)')
         await ctx.send(embed=embed)
 
     @commands.command(description="Get the link to the support server")
@@ -99,12 +98,10 @@ I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_
 
     @commands.command(description="Check our lovely Patrons!")
     async def patrons(self,ctx):
-        patrons = []
-
         await ctx.send(
 """You can support the bot here - <https://www.patreon.com/mellOwO?alert=2>
 ```
-
+Capn - Supporter 
 ```
 """)
 

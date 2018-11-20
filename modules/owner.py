@@ -1,56 +1,37 @@
 from discord.ext import commands
 import discord
+from utils import errorhandler
 
+staff_ids = [246938839720001536, 300088143422685185]
 
 class owner:
     def __init__(self, bot):
         self.bot = bot
 
     async def __local_check(self, ctx):
-        return await self.bot.is_owner(ctx.author)
+        if ctx.author.id in staff_ids:
+           return True
+
+        raise(errorhandler.IsStaff(ctx))
 
     @commands.command(hidden=True)
-    async def load(self, ctx, *, ext):
-        try:
-            self.bot.load_extension(ext)
-        except BaseException as e:  # filter BaseException for SystemExit
-            return await ctx.send(f"```py\n{type(e).__name__}: {e}\n```")
-        await ctx.send(f"{ext} loaded.")
-
-    @commands.command(hidden=True)
-    async def unload(self, ctx, *, ext):
-        self.bot.unload_extension(ext)
-        await ctx.send('Done')
-
-    @commands.command(hidden=True, aliases=['kys', 'exit'])
-    async def die(self, ctx):
-        await ctx.send("Bye cruel world...")
-        await self.bot.logout()
-
-    @commands.command(hidden=True, name="reload")
-    async def _reload(self, ctx, *, ext):
-        try:
-            self.bot.unload_extension(ext)
-            self.bot.load_extension(ext)
-            await ctx.send(f"**Successfully reloaded {ext}**")
-        except BaseException as e:
-            await ctx.send(f"```py\n{type(e).__name__}: {e}")
-
-    @commands.command(hidden=True, name='delete')
-    async def _delete(self,ctx,user_id,true=None):
+    async def plonk(self,ctx,user_id):
         await self.bot.pool.execute("DELETE FROM user_settings WHERE user_id = $1",user_id)
-        if true is None:
-            await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1",user_id)
+        await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1",user_id)
 
         await ctx.send('Done')
 
-    @commands.command(hidden=True,name='pset')
-    async def _pset(self,ctx,user_id:int):
+    @commands.group(invoke_without_command=True, description="Does nothing without a subcommand")
+    async def patreon(self, ctx):
+        await ctx.send("owo")
+
+    @patreon.command(hidden=True)
+    async def set(self,ctx,user_id:int):
         await self.bot.pool.execute("INSERT INTO p_users (user_id) VALUES ($1)",user_id)
         await ctx.send("Done")
 
-    @commands.command(hidden=True,name='premove')
-    async def _premove(self,ctx,user_id:int):
+    @patreon.command(hidden=True)
+    async def remove(self,ctx,user_id:int):
         await self.bot.pool.execute("DELETE FROM p_users WHERE user_id = $1",user_id)
         await ctx.send("Done")
 

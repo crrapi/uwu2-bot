@@ -29,7 +29,8 @@ startup_extensions = ['jishaku',
                       'modules.owner',
                       'modules.uwulonian',
                       'modules.misc',
-                      'modules.patron']
+                      'modules.patron',
+                      'modules.DBL']
 
 class uwu(commands.Bot):
     def __init__(self):
@@ -80,6 +81,12 @@ class uwu(commands.Bot):
 
         print(f"Ignoring error in command '{ctx.command}'.")  # print otherwise
         traceback.print_exception(type(exc), exc, exc.__traceback__)
+
+    @commands.is_owner()
+    @commands.command(hidden=True, aliases=['kys', 'exit'])
+    async def die(self, ctx):
+        await ctx.send("Bye cruel world...")
+        await self.logout()
 
 
 if __name__ == "__main__":

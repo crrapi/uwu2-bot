@@ -34,14 +34,17 @@ class patron:
             SET next_time = $2; 
         ''',user_id,time)
 
+    @commands.group(invoke_without_command=True, description="Does nothing without a subcommand")
+    async def patron(self, ctx):
+        await ctx.send("owo")
 
-    @commands.command(description="Check how long you have been a Patron")
-    async def ptimecheck(self,ctx):
+    @patron.command(description="Check how long you have been a Patron")
+    async def timecheck(self,ctx):
         patron = await self.bot.pool.fetchrow("SELECT * FROM p_users WHERE user_id = $1", ctx.author.id)
         await ctx.send(f"""You have been a Patron since {patron['patron_time'].strftime("%x at %X")}. Thanks for supporting me!""")
 
-    @commands.command(description="Patron only. Claim your biweekly uwus")
-    async def pbiweekly(self,ctx):
+    @patron.command(description="Patron only. Claim your biweekly uwus")
+    async def biweekly(self,ctx):
         user = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",ctx.author.id)
         if user is None:
             return await ctx.send("You don't have an uwulonian created.")

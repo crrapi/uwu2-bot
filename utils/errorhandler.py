@@ -7,6 +7,10 @@ class NotPatron(commands.CommandError):
     def __init__(self, ctx):
         super().__init__("You are not a Patron. You can become one here <https://www.patreon.com/mellOwO?alert=2>")
 
+class IsStaff(commands.CommandError):
+    def __init__(self, ctx):
+        super().__init__("This is a staff only command")
+
 class errorhandler:
     def __init__(self, bot):
         self.bot = bot
@@ -29,6 +33,8 @@ class errorhandler:
         if isinstance(error, commands.DisabledCommand):
             await ctx.send(f"{ctx.command} is disabled.")
         if isinstance(error, NotPatron):
+            return await ctx.send(error)
+        if isinstance(error, IsStaff):
             return await ctx.send(error)
         else:
             print(error)
