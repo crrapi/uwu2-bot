@@ -98,12 +98,14 @@ I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_
 
     @commands.command(description="Check our lovely Patrons!")
     async def patrons(self,ctx):
-        await ctx.send(
-"""You can support the bot here - <https://www.patreon.com/mellOwO?alert=2>
-```
-Capn - Supporter 
-```
+        e = discord.Embed(color=0x7289da, description="Patreon https://www.patreon.com/mellOwO?alert=2")
+        e.set_author(name="Our awesome Patrons")
+        e.add_field(name="Capn", value=
+"""
+Supporter since 11/19/18 at 20:42:35 
+- [His bot](https://discordapp.com/oauth2/authorize?&client_id=448915931507458048&scope=bot&permissions=8)
 """)
+        await ctx.send(embed=e)
 
 def setup(bot):
     bot.add_cog(misc(bot))
