@@ -53,6 +53,7 @@ class misc:
     @commands.command(aliases=['about'],description='Get stats about the bot',brief='Check bot stats',usage='info')
     async def info(self, ctx):
         cmds_used = await self.bot.pool.fetchval('''SELECT * FROM commands_used;''')
+        uwulonian = await self.bot.pool.fetchval("SELECT count(user_id) FROM user_settings;")
         delta_uptime = datetime.utcnow() - self.bot.launch_time
         hours, remainder = divmod(int(delta_uptime.total_seconds()),3600)
         minutes, seconds = divmod(remainder,60)
@@ -84,6 +85,7 @@ f'''
 Staring at {len(self.bot.users)} users in {len(self.bot.guilds)} servers.
 I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_percent()}% of my cpu
 {cmds_used} commands have been used      
+{uwulonian} uwulonians in the uwuniverse
 ''')
         embed.set_author(name='Bot Stats')
         embed.add_field(name='Members',value=f'{online}{online_count} {idle}{idle_count} {dnd}{dnd_count} {offline}{offline_count}')
@@ -106,6 +108,10 @@ Supporter since 11/19/18 at 20:42:35
 - [His bot](https://discordapp.com/oauth2/authorize?&client_id=448915931507458048&scope=bot&permissions=8)
 """)
         await ctx.send(embed=e)
+
+    @commands.command(description="Send voting link")
+    async def vote(self,ctx):
+        await ctx.send("You can vote for me here! https://discordbots.org/bot/508725128427995136/vote I greatly appreciate voting as it helps the bot a lot")
 
 def setup(bot):
     bot.add_cog(misc(bot))

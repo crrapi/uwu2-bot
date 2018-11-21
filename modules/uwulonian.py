@@ -16,17 +16,18 @@ class uwulonian:
 
     @commands.command(description='Get an uwulonians or your stats')
     async def stats(self,ctx,user: discord.Member=None):
-        user = user or ctx.author
-        uwulonian_name = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",user.id)
-        uwulonian = await self.bot.pool.fetchrow("SELECT * FROM user_stats WHERE user_id = $1",user.id)
-        if uwulonian is None:
-            return await ctx.send("You or the user doesn't have an uwulonian created.")
+        async with self.bot.pool.acquire() as conn:
+            user = user or ctx.author
+            uwulonian_name = await conn.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",user.id)
+            uwulonian = await conn.fetchrow("SELECT * FROM user_stats WHERE user_id = $1",user.id)
+            if uwulonian is None:
+                return await ctx.send("You or the user doesn't have an uwulonian created.")
 
-        e = discord.Embed(colour=0x7289da)
+            e = discord.Embed(colour=0x7289da)
 
-        e.add_field(name=f"Stats for {uwulonian_name['user_name']}",value=f"""Foes killed - {uwulonian['foes_killed']}\nDeaths - {uwulonian['total_deaths']}\n XP - {uwulonian['current_xp']}\nuwus - {uwulonian['uwus']}""")
-        e.add_field(name='Time created',value=f"""{uwulonian_name['time_created'].strftime("%x at %X")}""")
-        await ctx.send(embed=e)
+            e.add_field(name=f"Stats for {uwulonian_name['user_name']}",value=f"""Foes killed - {uwulonian['foes_killed']}\nDeaths - {uwulonian['total_deaths']}\n XP - {uwulonian['current_xp']}\nuwus - {uwulonian['uwus']}""")
+            e.add_field(name='Time created',value=f"""{uwulonian_name['time_created'].strftime("%x at %X")}""")
+            await ctx.send(embed=e)
 
     @commands.command(aliases=['lb','wowcheaterhenumber1onlb'])
     async def leaderboard(self,ctx,sort=None):

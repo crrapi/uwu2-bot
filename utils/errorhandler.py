@@ -9,7 +9,11 @@ class NotPatron(commands.CommandError):
 
 class IsStaff(commands.CommandError):
     def __init__(self, ctx):
-        super().__init__("This is a staff only command")
+        super().__init__("This is a staff only command.")
+
+class hasUwU(commands.CommandError):
+    def __init__(self, ctx):
+        super().__init__("You need an uwulonian for this command.")
 
 class errorhandler:
     def __init__(self, bot):
@@ -35,6 +39,8 @@ class errorhandler:
         if isinstance(error, NotPatron):
             return await ctx.send(error)
         if isinstance(error, IsStaff):
+            return await ctx.send(error)
+        if isinstance(error, hasUwU):
             return await ctx.send(error)
         else:
             print(error)

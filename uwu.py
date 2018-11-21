@@ -30,7 +30,8 @@ startup_extensions = ['jishaku',
                       'modules.uwulonian',
                       'modules.misc',
                       'modules.patron',
-                      'modules.DBL']
+                      'modules.DBL',
+                      'modules.marriage']
 
 class uwu(commands.Bot):
     def __init__(self):
@@ -87,7 +88,6 @@ class uwu(commands.Bot):
     async def die(self, ctx):
         await ctx.send("Bye cruel world...")
         await self.logout()
-
 
 if __name__ == "__main__":
     uwu().run()

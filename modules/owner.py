@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 from utils import errorhandler
+import asyncpg
 
 staff_ids = [246938839720001536, 300088143422685185]
 
@@ -27,8 +28,11 @@ class owner:
 
     @patreon.command(hidden=True)
     async def set(self,ctx,user_id:int):
-        await self.bot.pool.execute("INSERT INTO p_users (user_id) VALUES ($1)",user_id)
-        await ctx.send("Done")
+        try:
+            await self.bot.pool.execute("INSERT INTO p_users (user_id) VALUES ($1)",user_id)
+            await ctx.send("Done")
+        except asyncpg.UniqueViolationError:
+            return await ctx.send(f"{user_id} is already a Patron")
 
     @patreon.command(hidden=True)
     async def remove(self,ctx,user_id:int):

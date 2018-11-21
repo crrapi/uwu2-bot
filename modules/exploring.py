@@ -7,11 +7,19 @@ import asyncio
 import asyncpg
 from datetime import datetime, timedelta
 from random import randint
+from utils import errorhandler
+
 
 class exploring:
     def __init__(self, bot):
         self.bot = bot
         self.task = self.bot.loop.create_task(self.waiter())
+
+    async def __local_check(self, ctx):
+        if await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1", ctx.author.id):
+            return True
+
+        raise (errorhandler.hasUwU(ctx))
 
     def __unload(self):
         self.task.cancel()
@@ -34,6 +42,7 @@ class exploring:
     async def waiter(self):
         while not self.bot.is_closed():
             await asyncio.sleep(5)
+            print(self.bot.pool)
             rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers ORDER BY end_time DESC LIMIT 1;')
             if not rows:
                 continue
@@ -73,8 +82,6 @@ class exploring:
     @commands.command(description='Set your uwulonian out on an adventure', aliases=['adv'])
     async def adventure(self,ctx):
         user = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",ctx.author.id)
-        if user is None:
-            return await ctx.send("You don't have an uwulonian created.")
         if await self.has_timer(user_id=ctx.author.id):
             return await ctx.send("You already have an adventure/exploration. Wait for your uwulonian to return for a new adventure.")
 
@@ -84,10 +91,8 @@ class exploring:
     @commands.command(description='Make your uwulonian explore')
     async def explore(self,ctx):
         user = await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",ctx.author.id)
-        if user is None:
-            return await ctx.send("You don't have an uwulonian created.")
         if await self.has_timer(user_id=ctx.author.id):
-            return await ctx.send("Your uwulonian is already exploring/adventure. Wait for your uwulonian to return for a new exploration.")
+            return await ctx.send("Your uwulonian is already exploring/adventuring. Wait for your uwulonian to return for a new exploration.")
 
         await self.set_timer(user_id=ctx.author.id,time=1800,type=0)
         await ctx.send(f"Sending {user['user_name']} to explore! Your uwulonian will be back in an hour. Make sure your DMs are open so I can DM you once your uwulonian is back.")
