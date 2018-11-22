@@ -44,7 +44,7 @@ class marriage:
                 await msg.delete()
                 return await ctx.send(f"{ctx.author.mention} your lover ({lover.mention}) declined your marriage! There's a million fish in the sea though.")
             else:
-                await msg.edit(content="Invalid choice")
+                await msg.edit(content="Invalid choice. Did you type it properly? (capitals)")
 
     @commands.command(description="Divorce...")
     async def divorce(self,ctx):
@@ -54,6 +54,21 @@ class marriage:
 
             await self.bot.pool.execute("DELETE FROM marriages WHERE user1_id = $1 OR user2_id = $1", ctx.author.id)
             await ctx.send(":broken_heart:")
+
+    @commands.command(description="Check who you are married to")
+    async def marriage(self,ctx):
+        married = await self.bot.pool.fetchrow("SELECT * FROM marriages WHERE user1_id = $1 OR user2_id = $1", ctx.author.id)
+        if married is None:
+            return await ctx.send("You are not married.")
+
+        if married['user1_id'] == ctx.author.id:
+            user = self.bot.get_user(married['user2_id'])
+        else:
+            user = self.bot.get_user(married['user1_id'])
+
+        await ctx.send(f"""You are married to {user.name} since {married['time_married'].strftime("%X at %x")}.""")
+
+
 
 def setup(bot):
     bot.add_cog(marriage(bot))

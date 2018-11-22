@@ -26,8 +26,8 @@ class create:
             return await name_set.edit(content='Create timed out')
 
         if len(name.content) > 60 or len(name.content) < 3:
-            return await name_set.edit("Invalid name. Names can't be longer then 60 chars or less than 3 chars.")
-
+            await name_set.delete()
+            return await ctx.send("Invalid name. Names can't be longer then 60 chars or less than 3 chars.")
         try:
             await self.bot.pool.execute('INSERT INTO user_settings ("user_id","user_name") VALUES ($1,$2);',ctx.author.id,name.content)
         except asyncpg.UniqueViolationError:

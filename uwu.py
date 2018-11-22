@@ -35,7 +35,7 @@ startup_extensions = ['jishaku',
 
 class uwu(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix='uwu ', case_insensitive=True, description=description, reconnect=True)
+        super().__init__(command_prefix=commands.when_mentioned_or('uwu '), case_insensitive=True, description=description, reconnect=True)
         self.launch_time = datetime.utcnow()
         self.config = yaml.load(open("config.yml"))
         self.pool = None  # pool is unset till the bot is ready

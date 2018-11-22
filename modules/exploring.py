@@ -40,6 +40,7 @@ class exploring:
         ''',user_id,time,type)
 
     async def waiter(self):
+        await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             await asyncio.sleep(5)
             print(self.bot.pool)
@@ -95,7 +96,7 @@ class exploring:
             return await ctx.send("Your uwulonian is already exploring/adventuring. Wait for your uwulonian to return for a new exploration.")
 
         await self.set_timer(user_id=ctx.author.id,time=1800,type=0)
-        await ctx.send(f"Sending {user['user_name']} to explore! Your uwulonian will be back in an hour. Make sure your DMs are open so I can DM you once your uwulonian is back.")
+        await ctx.send(f"Sending {user['user_name']} to explore! Your uwulonian will be back in thirty minutes. Make sure your DMs are open so I can DM you once your uwulonian is back.")
 
 def setup(bot):
     bot.add_cog(exploring(bot))
