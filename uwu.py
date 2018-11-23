@@ -10,6 +10,7 @@ import os
 import sys
 import logging
 import aiohttp
+import psutil
 
 try:
     import uvloop
@@ -40,7 +41,8 @@ class uwu(commands.Bot):
         self.config = yaml.load(open("config.yml"))
         self.pool = None  # pool is unset till the bot is ready
         self.session = aiohttp.ClientSession(loop=self.loop)
-        self.bot_version = '0.0.2 owo'
+        self.bot_version = '0.0.3 cat'
+        self.process = psutil.Process(os.getpid())
 
     def run(self):
         for ext in startup_extensions:

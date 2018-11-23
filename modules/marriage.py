@@ -24,7 +24,7 @@ class marriage:
             if lover is None or lover is ctx.author:
                 return await ctx.send("Trying to marry yourself...")
             if await conn.fetchrow("SELECT * FROM user_settings WHERE user_id = $1",lover.id) is None:
-                return await ctx.send(f"{lover.name} does not have a uwulonian.")
+                return await ctx.send(f"{lover.name} does not have an uwulonian.")
             if await conn.fetchrow("SELECT * FROM marriages WHERE user1_id = $1 OR user2_id = $1 OR user1_id = $2 OR user2_id = $2", ctx.author.id, lover.id):
                 return await ctx.send("Either you or the person you are trying to marry is already married...")
 

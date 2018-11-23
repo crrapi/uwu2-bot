@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from random import randint
 from random import choice
 import psutil
+import os
+import sys
 
 colors = [0xe56b6b,0xdd5151,0xba3434,0xab1f1f,0x940808]
 online = '<:online_status:506963324391653387>'
@@ -59,11 +61,14 @@ class misc:
         minutes, seconds = divmod(remainder,60)
         days, hours = divmod(hours,24)
         member_count = 0
-        mem_usage = psutil.virtual_memory()[2]
         offline_members = set()
         idle_members = set()
         dnd_members = set()
         online_members = set()
+        cpu_usage = self.bot.process.cpu_percent()
+        cpu_count = psutil.cpu_count()
+        memory_usage = self.bot.process.memory_percent()
+        version = sys.version_info
         for g in self.bot.guilds:
             member_count += g.member_count
             for m in g.members:
@@ -80,18 +85,18 @@ class misc:
         dnd_count = len(dnd_members)
         online_count = len(online_members)
         user_count = len(self.bot.users)
-        embed = discord.Embed(color=0x7289da,description=
-f'''
-Staring at {len(self.bot.users)} users in {len(self.bot.guilds)} servers.
-I am using {psutil.virtual_memory()[2]}% of my available memory and {psutil.cpu_percent()}% of my cpu
-{cmds_used} commands have been used      
-{uwulonian} uwulonians in the uwuniverse
-''')
+        embed = discord.Embed(color=0x7289da)
         embed.set_author(name='Bot Stats')
+        embed.add_field(name='Owner',value=f'<@300088143422685185> (mellowmarshe#0001)')
+        embed.add_field(name='Library',value=f'[discord.py\\[rewrite\\]](https://github.com/Rapptz/discord.py/tree/rewrite)')
+        embed.add_field(name='Language',value=f'Python {version.major}.{version.minor}.{version.micro}')
+        embed.add_field(name='Uptime',value=f'{days}d {hours}h {minutes}m')
+        embed.add_field(name='Servers', value=len(self.bot.guilds))
+        embed.add_field(name='Process',value=f'Memory {round(memory_usage, 2)} MiB\nCPU {cpu_usage/cpu_count}%')
+        embed.add_field(name='Bot Usage',value=f'{cmds_used} commands used\n{uwulonian} uwulonians')
+        embed.add_field(name='\u200b', value='\u200b')
         embed.add_field(name='Members',value=f'{online}{online_count} {idle}{idle_count} {dnd}{dnd_count} {offline}{offline_count}')
-        embed.add_field(name='Uptime',value=f'~~My VPS has been burning for~~ {days}d {hours}h {minutes}m')
-        embed.add_field(name='Info',value=f'Made in Python 3.6.6 with Discord.py[rewrite] {discord.__version__}. Made by mellowmarshe#0001. Bot version {self.bot.bot_version}')
-        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983) | [DigitalOcean Referral](https://m.do.co/c/e9f223fd5a5c)\n[Source](https://github.com/Domterion/uwu2-bot) | [Support](https://discord.gg/494uEhN)\n[Patreon](https://www.patreon.com/mellOwO?alert=2) | [Vote](https://discordbots.org/bot/508725128427995136/vote)')
+        embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983) | [Support](https://discord.gg/494uEhN) | [Donate](https://www.patreon.com/mellOwO?alert=2) | [Vote](https://discordbots.org/bot/508725128427995136/vote)')
         await ctx.send(embed=embed)
 
     @commands.command(description="Get the link to the support server")
