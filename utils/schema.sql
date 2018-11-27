@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_settings (
 
 CREATE TABLE IF NOT EXISTS user_timers (
     user_id BIGINT NOT NULL,
-    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    end_time TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
     timer_type INT NOT NULL
 );
 
@@ -44,6 +44,21 @@ CREATE TABLE IF NOT EXISTS user_badges (
     badges TEXT[] NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS trivia_questions (
+    question_id SERIAL PRIMARY KEY,
+    question VARCHAR(512) NOT NULL,
+    answers1 VARCHAR(50) NOT NULL,
+    answers2 VARCHAR(50) NOT NULL,
+    answers3 VARCHAR(50),
+    answers4 VARCHAR(50),
+    answer INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS trivia_channels (
+    guild_id BIGINT PRIMARY KEY NOT NULL,
+    channel_id BIGINT NOT NULL,
+    host_id BIGINT NOT NULL
+);
 
 --ALTER TABLE marriages ADD CONSTRAINT user_marriages_user_id_fkey FOREIGN KEY (user1_id) REFERENCES user_settings (user_id) ON DELETE CASCADE;")
 --ALTER TABLE user_badges ADD CONSTRAINT user_badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_settings (user_id) ON DELETE CASCADE;")
