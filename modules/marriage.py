@@ -66,7 +66,7 @@ class marriage:
         else:
             user = self.bot.get_user(married['user1_id'])
 
-        await ctx.send(f"""You are married to {user.name} since {married['time_married'].strftime("%X at %x")}.""")
+        await ctx.send(f"""You married to {user.name} since {married['time_married'].strftime("%X at %x")}.""")
 
 
 

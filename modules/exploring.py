@@ -13,7 +13,8 @@ from utils import errorhandler
 class exploring:
     def __init__(self, bot):
         self.bot = bot
-        self.task = self.bot.loop.create_task(self.waiter())
+        self.task = self.bot.loop.create_task(self.waiter_e())
+        self.task1 = self.bot.loop.create_task(self.waiter_a())
 
     async def __local_check(self, ctx):
         if await self.bot.pool.fetchrow("SELECT * FROM user_settings WHERE user_id = $1", ctx.author.id):
@@ -39,19 +40,20 @@ class exploring:
             VALUES ($1,$2,$3) 
         ''',user_id,time,type)
 
-    async def waiter(self):
+    async def waiter_e(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             await asyncio.sleep(5)
-            print(self.bot.pool)
-            rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers ORDER BY end_time DESC LIMIT 1;')
+            print(f"Pool: {self.bot.pool}")
+            rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers WHERE timer_type = 0 LIMIT 1;')
+            print(f"Rows: {rows}")
             if not rows:
                 continue
             time = rows['end_time'] - datetime.utcnow()
             await asyncio.sleep(time.total_seconds())
             e = discord.Embed()
             #0 is explore
-            user = self.bot.get_user(rows['user_id'])
+            user = await self.bot.get_user_info(rows['user_id'])
             if rows['timer_type'] is 0:
                 deaths = randint(1,2)
                 foes_killed = randint(10,120)
@@ -61,6 +63,35 @@ class exploring:
                 e.add_field(name='Explore Stats',value=f"Foes killed - {foes_killed}\nDeaths - {deaths}(-50 per death)\nXP Earned - {xp}\nuwus Earned - {uwus_earned}")
                 e.set_footer(text='Good luck on your next exploration!')
             else:
+                pass
+            try:
+                await user.send(embed=e)
+            except discord.Forbidden:
+                pass
+            e = discord.Embed()
+            guild = self.bot.get_guild(513888506498646052)
+            channel = discord.utils.get(guild.text_channels, id=515577306283245569)
+            e.set_author(name=f"""{user.name}'s uwulonian is back from an Exploration""")
+            e.add_field(name='Stats',value=f"Foes killed - {foes_killed}\nDeaths - {deaths}(-50 per death)\nXP Earned - {xp}\nuwus Earned - {uwus_earned}")
+
+            await channel.send(embed=e)
+            await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1 AND timer_type = $2",rows['user_id'], rows['timer_type'])
+
+    async def waiter_a(self):
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            await asyncio.sleep(5)
+            print(f"Pool: {self.bot.pool}")
+            rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers WHERE timer_type = 1 LIMIT 1;')
+            print(f"Rows: {rows}")
+            if not rows:
+                continue
+            time = rows['end_time'] - datetime.utcnow()
+            await asyncio.sleep(time.total_seconds())
+            e = discord.Embed()
+            #0 is explore
+            user = await self.bot.get_user_info(rows['user_id'])
+            if rows['timer_type'] is 1:
                 deaths = randint(1,4)
                 foes_killed = randint(45,320)
                 uwus_earned = (foes_killed * 10) - (deaths * 50)
@@ -68,6 +99,8 @@ class exploring:
                 e.set_author(name=f"Your uwulonian is back from their adventure")
                 e.add_field(name='Adventure Stats',value=f"Foes killed - {foes_killed}\nDeaths - {deaths}(-50 per death)\nXP Earned - {xp}\nuwus Earned - {uwus_earned}")
                 e.set_footer(text='Good luck on your next adventure!')
+            else:
+                pass
             await self.bot.pool.execute('''
             INSERT INTO user_stats (user_id,uwus,foes_killed,total_deaths,current_xp)
             VALUES ($1,$2,$3,$4,$5) 
@@ -78,7 +111,13 @@ class exploring:
                 await user.send(embed=e)
             except discord.Forbidden:
                 pass
-            await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1 AND timer_type = $2",rows['user_id'],rows['timer_type'])
+            e = discord.Embed()
+            guild = self.bot.get_guild(513888506498646052)
+            channel = discord.utils.get(guild.text_channels, id=515577306283245569)
+            e.set_author(name=f"""{user.name}'s uwulonian is back from an Adventure""")
+            e.add_field(name='Stats',value=f"Foes killed - {foes_killed}\nDeaths - {deaths}(-50 per death)\nXP Earned - {xp}\nuwus Earned - {uwus_earned}")
+            await channel.send(embed=e)
+            await self.bot.pool.execute("DELETE FROM user_timers WHERE user_id = $1 AND timer_type = $2",rows['user_id'], rows['timer_type'])
 
     @commands.command(description='Set your uwulonian out on an adventure', aliases=['adv'])
     async def adventure(self,ctx):
@@ -87,6 +126,14 @@ class exploring:
             return await ctx.send("You already have an adventure/exploration. Wait for your uwulonian to return for a new adventure.")
 
         await self.set_timer(user_id=ctx.author.id,time=3600,type=1)
+        guild = self.bot.get_guild(513888506498646052)
+        channel = discord.utils.get(guild.text_channels, id=514246616459509760)
+        await channel.send(
+f"""```ini
+[Adventure Set]
+User {ctx.author}({ctx.author.id})
+Time {datetime.utcnow().strftime("%X on %x")}```
+""")
         await ctx.send(f"Sending {user['user_name']} on an adventure! Your uwulonian will be back in an hour. Make sure your DMs are open so I can DM you once your uwulonian is back.")
 
     @commands.command(description='Make your uwulonian explore')
@@ -96,6 +143,14 @@ class exploring:
             return await ctx.send("Your uwulonian is already exploring/adventuring. Wait for your uwulonian to return for a new exploration.")
 
         await self.set_timer(user_id=ctx.author.id,time=1800,type=0)
+        guild = self.bot.get_guild(513888506498646052)
+        channel = discord.utils.get(guild.text_channels, id=514246616459509760)
+        await channel.send(
+f"""```ini
+[Explore Set]
+User {ctx.author}({ctx.author.id})
+Time {datetime.utcnow().strftime("%X on %x")}```
+""")
         await ctx.send(f"Sending {user['user_name']} to explore! Your uwulonian will be back in thirty minutes. Make sure your DMs are open so I can DM you once your uwulonian is back.")
 
 def setup(bot):

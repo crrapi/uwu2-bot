@@ -67,7 +67,7 @@ class misc:
         online_members = set()
         cpu_usage = self.bot.process.cpu_percent()
         cpu_count = psutil.cpu_count()
-        memory_usage = self.bot.process.memory_percent()
+        memory_usage = self.bot.process.memory_full_info().uss / (1024 ** 2)
         version = sys.version_info
         for g in self.bot.guilds:
             member_count += g.member_count
@@ -92,9 +92,8 @@ class misc:
         embed.add_field(name='Language',value=f'Python {version.major}.{version.minor}.{version.micro}')
         embed.add_field(name='Uptime',value=f'{days}d {hours}h {minutes}m')
         embed.add_field(name='Servers', value=len(self.bot.guilds))
-        embed.add_field(name='Process',value=f'Memory {round(memory_usage, 2)} MiB\nCPU {cpu_usage/cpu_count}%')
+        embed.add_field(name='Process',value=f'Memory {round(memory_usage, 2)}MiB\nCPU {cpu_usage/cpu_count}%')
         embed.add_field(name='Bot Usage',value=f'{cmds_used} commands used\n{uwulonian} uwulonians')
-        embed.add_field(name='\u200b', value='\u200b')
         embed.add_field(name='Members',value=f'{online}{online_count} {idle}{idle_count} {dnd}{dnd_count} {offline}{offline_count}')
         embed.add_field(name='Links',value='[Invite](https://discordapp.com/oauth2/authorize?client_id=508725128427995136&scope=bot&permissions=201718983) | [Support](https://discord.gg/494uEhN) | [Donate](https://www.patreon.com/mellOwO?alert=2) | [Vote](https://discordbots.org/bot/508725128427995136/vote)')
         await ctx.send(embed=embed)

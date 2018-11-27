@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_settings (
 
 CREATE TABLE IF NOT EXISTS user_timers (
     user_id BIGINT NOT NULL,
-    end_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     timer_type INT NOT NULL
 );
 

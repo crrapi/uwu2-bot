@@ -15,6 +15,10 @@ class hasUwU(commands.CommandError):
     def __init__(self, ctx):
         super().__init__("You need an uwulonian for this command.")
 
+class isBeta(commands.CommandError):
+    def __init__(self, ctx):
+        super().__init__("This is a beta-server only command.")
+
 class errorhandler:
     def __init__(self, bot):
         self.bot = bot
@@ -24,6 +28,7 @@ class errorhandler:
             return
 
         errors = (commands.NoPrivateMessage, commands.CommandInvokeError, commands.UserInputError)
+        c_errors = (NotPatron, IsStaff, hasUwU, isBeta)
         error = getattr(error, 'original', error)
 
         if isinstance(error, errors):
@@ -36,11 +41,7 @@ class errorhandler:
             await ctx.send(f"A required argument is missing. Ya sure you read the command description?")
         if isinstance(error, commands.DisabledCommand):
             await ctx.send(f"{ctx.command} is disabled.")
-        if isinstance(error, NotPatron):
-            return await ctx.send(error)
-        if isinstance(error, IsStaff):
-            return await ctx.send(error)
-        if isinstance(error, hasUwU):
+        if isinstance(error, c_errors):
             return await ctx.send(error)
         else:
             print(error)
