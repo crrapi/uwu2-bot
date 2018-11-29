@@ -33,7 +33,8 @@ startup_extensions = ['jishaku',
                       'modules.patron',
                       'modules.DBL',
                       'modules.marriage',
-                      'modules.beta']
+                      'modules.beta',
+                      'modules.uwus']
 
 class uwu(commands.Bot):
     def __init__(self):

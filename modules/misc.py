@@ -108,8 +108,12 @@ class misc:
         e.set_author(name="Our awesome Patrons")
         e.add_field(name="Capn", value=
 """
-Supporter since 11/19/18 at 20:42:35 
+Supporter since 11/19/18 at 20:42:35 UTC
 - [His bot](https://discordapp.com/oauth2/authorize?&client_id=448915931507458048&scope=bot&permissions=8)
+""")
+        e.add_field(name="Arika", value=
+"""
+Supporter since 11/28/18 at 02:06:13 UTC
 """)
         await ctx.send(embed=e)
 

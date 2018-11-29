@@ -8,6 +8,7 @@ import asyncpg
 from datetime import datetime, timedelta
 from random import randint
 from utils import errorhandler
+from utils import extras
 
 
 class exploring:
@@ -44,13 +45,10 @@ class exploring:
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             await asyncio.sleep(5)
-            print(f"Pool: {self.bot.pool}")
             rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers WHERE timer_type = 0 LIMIT 1;')
-            print(f"Rows: {rows}")
             if not rows:
                 continue
-            time = rows['end_time'] - datetime.utcnow()
-            await asyncio.sleep(time.total_seconds())
+            await extras.sleep_time(rows['end_time'])
             e = discord.Embed()
             #0 is explore
             user = await self.bot.get_user_info(rows['user_id'])
@@ -81,13 +79,10 @@ class exploring:
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             await asyncio.sleep(5)
-            print(f"Pool: {self.bot.pool}")
             rows = await self.bot.pool.fetchrow('SELECT * FROM user_timers WHERE timer_type = 1 LIMIT 1;')
-            print(f"Rows: {rows}")
             if not rows:
                 continue
-            time = rows['end_time'] - datetime.utcnow()
-            await asyncio.sleep(time.total_seconds())
+            await extras.sleep_time(rows['end_time'])
             e = discord.Embed()
             #0 is explore
             user = await self.bot.get_user_info(rows['user_id'])
