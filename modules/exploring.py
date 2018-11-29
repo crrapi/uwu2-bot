@@ -28,9 +28,8 @@ class exploring:
 
     async def has_timer(self,user_id):
         user = await self.bot.pool.fetchrow("SELECT * FROM user_timers WHERE user_id = $1;",user_id)
-        #end_time should be time delta of end time for adventure. If it equals the current time it should be done
         if user is not None:
-            return True #user['end_time'] >= datetime.utcnow()
+            return True
 
     async def set_timer(self,user_id,time:int,type):
 
