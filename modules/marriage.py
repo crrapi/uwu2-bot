@@ -36,15 +36,15 @@ class marriage:
             except asyncio.TimeoutError:
                 return await msg.edit(content="Marriage timed out.")
 
-            if choice.content == "I do":
+            if choice.content.lower() == "i do":
                 await conn.execute("INSERT INTO marriages (user1_id,user2_id) VALUES ($1,$2)", ctx.author.id, lover.id)
                 await msg.delete()
                 return await ctx.send(f"UwU! {lover.mention} has accepted {ctx.author.mention}'s proposal!")
-            if choice.content == "No":
+            if choice.content.lower() == "no":
                 await msg.delete()
                 return await ctx.send(f"{ctx.author.mention} your lover ({lover.mention}) declined your marriage! There's a million fish in the sea though.")
             else:
-                await msg.edit(content="Invalid choice. Did you type it properly? (capitals)")
+                await msg.edit(content="Invalid choice. Did you type it properly?")
 
     @commands.command(description="Divorce...")
     async def divorce(self,ctx):
